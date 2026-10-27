@@ -1,0 +1,4 @@
+interface:
+  display_name: "LG C4 Root 助手"
+  short_description: "按实测路径探测 LG C4，验证启动 root 身份并建立个人密钥 SSH"
+  default_prompt: "使用 $lg-webos-c4-root 检查我自有 LG C4 的型号与固件兼容范围，先做离线检查，再按我的授权探测和验证 root。"
