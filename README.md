@@ -96,7 +96,7 @@ python -m unittest discover -s tests -v
 
 `--dry-run` 不连接电视、不开启 HTTP 服务，只检查参数和生成结果摘要。离线测试验证请求构造、运行隔离与载荷处理；它不能证明电视固件允许相同的请求，也不能代替新的真机兼容性测试。
 
-当前共有 20 项离线测试。Linux 有可用的 POSIX shell 时可直接运行。Windows 若已有 Git for Windows，可在 PowerShell 指定其 Bash，让 shell 夹具一并运行：
+当前共有 26 项离线测试，包含独立安装技能后的离线集成验证。Linux 有可用的 POSIX shell 时可直接运行。Windows 若已有 Git for Windows，可在 PowerShell 指定其 Bash，让 shell 夹具一并运行：
 
 ```powershell
 $env:LG_ROOT_TEST_SHELL = 'C:/Program Files/Git/usr/bin/bash.exe'
@@ -104,6 +104,28 @@ python -m unittest discover -s tests -v
 ```
 
 按自己的实际安装位置修改路径；没有可用 shell 时，6 项 shell 夹具会明确跳过，其余测试照常执行。GitHub Actions 为 Ubuntu 与 Windows 分别指定 shell，检查完整测试集。
+
+## Codex Skill
+
+本流程也提供可独立安装的 **[lg-webos-c4-root 技能](skills/lg-webos-c4-root/SKILL.md)**。它包含中文执行指引、阶段判断、恢复说明和与本仓库工具一致的脚本；安装时只需要 `skills/lg-webos-c4-root` 目录，不需要另行克隆完整仓库。
+
+在 Codex 中发送下面的指令即可通过内置技能安装器安装：
+
+```text
+使用 $skill-installer 安装 https://github.com/RickeyRen/lg-webos-c4-root/tree/main/skills/lg-webos-c4-root
+```
+
+安装完成后，在下一轮对话中调用：
+
+```text
+使用 $lg-webos-c4-root 检查我的 LG C4 是否适用，先做离线检查，再按我的授权执行探测和 root 验证。
+```
+
+也可手动把整个 `skills/lg-webos-c4-root` 目录复制到自己的 `$CODEX_HOME/skills`（未设置时为 `~/.codex/skills`）。技能使用 Python 3.10+ 标准库，包含 `SKILL.md`、界面元数据、脚本、载荷、参考资料及 AGPL 许可证；不包含电视配对信息、个人密钥或 Dropbear 二进制。
+
+技能不会因安装而连接电视。后续使用仍以指定设备和用户授权为边界：默认探测会写入无害探测文件，`stage` / `ssh` 会替换启动缓存，要求明确的覆盖参数和现场冷启动。历史真机范围与整理版仅做离线验证的限制同样适用。
+
+维护脚本或载荷时需同步技能中的副本；测试会检查它们与 canonical 源码逐字节一致，并将技能单独复制到临时目录，禁止网络后验证各模式的 `--dry-run`，避免安装包依赖仓库外文件。
 
 ## 与 LG TV 控制器配合
 
